@@ -349,6 +349,16 @@
 				return true;
 			}
 		},
+		
+		_disableTimePicker: function() {
+			var o = this.inst.settings;
+			o.showTimepicker = false;
+		}, 
+		
+		_enableTimePicker: function() {
+			var o = this.inst.settings;
+			o.showTimepicker = true;
+		},
 
 		/*
 		* generate and inject html for timepicker into ui datepicker
@@ -419,7 +429,6 @@
 				// Create the elements from string
 				html += '</dl></div>';
 				var $tp = $(html);
-
 				// Attach events
 				$tp.find("#enable-time").change(this, toggleDisplay);
 
@@ -1489,7 +1498,7 @@
 		$(target).datepicker('getDate'); // Init selected[Year|Month|Day]
 		if (tp_inst) {
 			tp_inst._defaults.showTimepicker = false;
-			tp_inst.settings.showTimePicker = false;
+			tp_inst._disableTimePicker();
 			tp_inst._updateDateTime(inst);
 		}
 	};
@@ -1504,7 +1513,7 @@
 		$(target).datepicker('getDate'); // Init selected[Year|Month|Day]
 		if (tp_inst) {
 			tp_inst._defaults.showTimepicker = true;
-			tp_inst.settings.showTimePicker = true;
+			tp_inst._enableTimePicker();
 			tp_inst._addTimePicker(inst); // Could be disabled on page load
 			tp_inst._updateDateTime(inst);
 		}
