@@ -367,9 +367,11 @@
 				l=0;
 
 			// Prevent displaying twice
-			if ($dp.find("div.ui-timepicker-div").length === 0 && o.showTimepicker) {
+			if ($dp.find("div.ui-timepicker-div").length === 0) {
 				var noDisplay = ' style="display:none;"',
-					html = '<div class="ui-timepicker-div'+ (o.isRTL? ' ui-timepicker-rtl' : '') +'"><dl>' + '<dt class="ui_tpicker_time_label"' + ((o.showTime) ? '' : noDisplay) + '>' + o.timeText + '</dt>' + 
+					html = '<div class="ui-timepicker-div'+ (o.isRTL? ' ui-timepicker-rtl' : '') +'">' + 
+								'<span><input type="checkbox" id="enable-time" ' + (o.showTimepicker ? 'checked="checked"' : '') + '><label for="enable-time">Enable Time</label></span>' + 
+								'<dl class="ui_tpicker_ctrl"' + ((o.showTimepicker) ? '' : noDisplay) + '>' + '<dt class="ui_tpicker_time_label"' + ((o.showTime) ? '' : noDisplay) + '>' + o.timeText + '</dt>' + 
 								'<dd class="ui_tpicker_time"' + ((o.showTime) ? '' : noDisplay) + '></dd>';
 
 				// Create the markup
@@ -417,6 +419,9 @@
 				// Create the elements from string
 				html += '</dl></div>';
 				var $tp = $(html);
+
+				// Attach events
+				$tp.find("#enable-time").change(this, toggleDisplay);
 
 				// if we only want time picker...
 				if (o.timeOnly === true) {
@@ -1484,6 +1489,7 @@
 		$(target).datepicker('getDate'); // Init selected[Year|Month|Day]
 		if (tp_inst) {
 			tp_inst._defaults.showTimepicker = false;
+			tp_inst.settings.showTimePicker = false;
 			tp_inst._updateDateTime(inst);
 		}
 	};
@@ -1498,6 +1504,7 @@
 		$(target).datepicker('getDate'); // Init selected[Year|Month|Day]
 		if (tp_inst) {
 			tp_inst._defaults.showTimepicker = true;
+			tp_inst.settings.showTimePicker = true;
 			tp_inst._addTimePicker(inst); // Could be disabled on page load
 			tp_inst._updateDateTime(inst);
 		}
@@ -1909,6 +1916,21 @@
 			tp_inst.timezone_select.val(now.getTimezoneOffset()*-1);
 		}
 	};
+	
+	/* -- AF
+	* Internal function to hide/show UI
+	*/
+	var toggleDisplay = function(e) {
+		// AF: this isn't implemented properly I'm sure...
+		if (this.checked) {
+			$.datepicker._enableTimepickerDatepicker(e.data.$input[0]);
+			$(".ui_tpicker_ctrl").show();
+		}
+		else {
+			$.datepicker._disableTimepickerDatepicker(e.data.$input[0]);
+			$(".ui_tpicker_ctrl").hide();
+		}
+	}
 
 	/*
 	* Create a Singleton Insance
